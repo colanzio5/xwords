@@ -8,6 +8,8 @@ import router from "./router";
 
 import App from "./App.vue";
 import GamesList from "./components/GameList.vue";
+import ToolBar from './components/GameList.vue';
+import bulmaAccordion from 'bulma-extensions';
 
 Vue.use(Buefy);
 Vue.config.productionTip = false;
@@ -34,5 +36,5 @@ new Vue({
   render: h => h(App),
   router,
   store,
-  components: { App, GamesList, }
+  components: { App, GamesList, ToolBar }
 }).$mount("#app");

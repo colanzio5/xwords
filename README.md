@@ -1,13 +1,13 @@
 # xwords
 
 ## todos: 
+- [ ] Game view
+- [ ] Bootstrap sockets per game
+- [ ] Passwords and sharing for games
 - [ ] Create new game view
 - [ ] Delete game logic
-- [ ] Passwords and sharing for games
-- [ ] Bootstrap sockets per game
 - [ ] Make sure usernames are unique
 - [ ] Add profile View
-- [ ] Game view
 - [ ] Game chat view
 - [ ] NYT Import Automation
 - [ ] Refactor logic for view logic

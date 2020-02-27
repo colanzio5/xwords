@@ -1,13 +1,10 @@
 <template>
-    <div class="columns">
-        <div class="column is-half">
-            <img
-                src="../../assets/images/xwords _square.jpg"
-                alt="Avatar"
-                class="xwords-icon"
-            />
+    <div class="tile is-ancestor">
+        <div class="tile is-parent ">
+            <div class="tile is-child box has-background-black">
+                <GamesList></GamesList>
+            </div>
         </div>
-        <div class="column"><GamesList></GamesList></div>
     </div>
 </template>
 

@@ -62,9 +62,9 @@ const router = new Router({
           name: "Game",
           component: Game,
           props: true,
-          meta: {
-            requiresAuth: true
-          }
+          // meta: {
+          //   requiresAuth: true
+          // }
         }
       ]
     },
@@ -78,15 +78,16 @@ const router = new Router({
 // check to make sure there's a valid user
 // when navigating between pages
 router.beforeEach((to, from, next) => {
-  try {
-    let currentUser = firebase.auth().currentUser
-    let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-    if (requiresAuth && !currentUser) next('login')
-    else next()
-  } catch (error) {
-    console.error("[router auth middleware] error: ", error);
-    next()
-  }
+  // try {
+  //   let currentUser = firebase.auth().currentUser
+  //   let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  //   if (requiresAuth && !currentUser) next('login')
+  //   else next()
+  // } catch (error) {
+  //   console.error("[router auth middleware] error: ", error);
+  //   next()
+  // }
+  next()
 })
 
 export default router;
