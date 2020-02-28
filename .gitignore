@@ -66,3 +66,6 @@ node_modules/
 
 # build files
 dist
+
+# cached files
+.cache

@@ -10,12 +10,7 @@ import * as firebase from "firebase";
 
 
 @Component({ name: "Profile" })
-export default class Profile extends Vue {
-
-    created() {
-        // console.log(this.games);
-    }
-}
+export default class Profile extends Vue {}
 </script>
 
 <style lang="scss"></style>

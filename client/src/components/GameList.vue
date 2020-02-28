@@ -1,69 +1,63 @@
 <template>
     <div>
         <div v-if="!games || !games.length">No Games Found!</div>
-        <div class="box content" v-else>
-            <div v-for="game in games" v-bind:key="game.id">
-                <br>
-                <div class="game-row">
-                    <div class="media">
-                        <div class="media-left">
-                            <p class="image is-32x32">
-                                <img
-                                    src="http://bulma.io/images/placeholders/128x128.png"
-                                />
-                            </p>
-                        </div>
-                        <div class="media-content">
-                            <div class="content">
-                                <h4 v-on:click="goToGame(game)">{{game.name}}</h4>
-                                <p>
-                                    <a href="#">{{game.owner.username}} </a> created at
-                                    {{ game.createdAt }}
-                                    &nbsp;
-                                    <span class="tag">{{game.status}}</span>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="media-right">
-                            <span class="has-text-grey-light">
-                                <i class="fa fa-user"></i> {{ game.members.length + 1 }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <br>
-            </div>
+        <div v-else class="table-container">
+            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Owner</th>
+                        <th>Status</th>
+                        <th>Date Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="game in games" v-bind:key="game.id" v-on:click="goToGame(game)">
+                        <th>{{ game.name }}</th>
+                        <td>{{ game.owner.username }}</td>
+                        <td>{{ game.status }}</td>
+                        <td>{{ game.createdAt }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
 
+<style lang="scss">
+tr:hover {
+    cursor: pointer;
+    color: #7957d5;
+}
+</style>
+
+
 <script lang="ts">
 import { Component, Vue, Prop, Provide } from "vue-property-decorator";
 import * as firebase from "firebase";
-import { testCrossword } from '../../assets/test.crossword'
+import { testCrossword } from "../../assets/test.crossword";
+import { fetchUserGames } from "../services/game.service";
+import { State, Action, Getter } from "vuex-class";
 
+import { CrossWordGame } from "../types/CrossWordGame";
 
 @Component({ name: "GamesList" })
 export default class GamesList extends Vue {
-    // todo: replace with request to database
-    games = [testCrossword];
+    @Getter("games") games: CrossWordGame[];
+    @Action("fetchUserGames") fetchUserGames;
+    @Action("setActiveGameId") setActiveGameId;
+
     created() {
-        console.log(this.games);
+        this.fetchUserGames();
     }
 
     goToGame(game) {
-        this.$router.replace({ name: "Game", params: { username: this.$route.params.username, gameId: game.id }});
+        this.setActiveGameId(game.id);
+        this.$router.replace({
+            name: "Game",
+            params: { username: this.$route.params.username, gameId: game.id }
+        });
     }
 }
 </script>
 
-<style lang="scss">
-.media-left img {
-    border-radius: 50%;
-}
-
-h4:hover {
-    color: #7957d5;
-}
-
-</style>

@@ -1,7 +1,5 @@
 <template>
-    <div id="app">
-        <router-view></router-view>
-    </div>
+    <router-view></router-view>
 </template>
 
 <script lang="ts">
@@ -12,16 +10,10 @@ export default class App extends Vue {}
 </script>
 
 <style lang="scss">
-#app {
-    height: 100vh;
-    width: 100vw;
-    background: black;
-    color: white;
-}
 .xwords-icon {
-  border-top-left-radius: 50% 50%;
-  border-top-right-radius: 50% 50%;
-  border-bottom-right-radius: 50% 50%;
-  border-bottom-left-radius: 50% 50%;
+    border-top-left-radius: 50% 50%;
+    border-top-right-radius: 50% 50%;
+    border-bottom-right-radius: 50% 50%;
+    border-bottom-left-radius: 50% 50%;
 }
 </style>
