@@ -69,3 +69,6 @@ dist
 
 # cached files
 .cache/*
+
+# vscode settings files
+.vscode
