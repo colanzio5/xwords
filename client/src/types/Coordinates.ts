@@ -1,4 +1,4 @@
-export type Coordinates = {
-    x: number,
-    y: number
-}
+export type ICoordinates = {
+    x: number;
+    y: number;
+};

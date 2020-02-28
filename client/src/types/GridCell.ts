@@ -1,8 +1,8 @@
-import { CrossWordQuestion } from "./CrossWordQuestion";
-import { Coordinates } from "./Coordinates";
-export type GridCell = {
-    coordinates: Coordinates,
-    letterValue: string,
-    isTextCell: boolean,
-    parentQuestion: CrossWordQuestion | false;
+import { ICrossWordQuestion } from "./CrossWordQuestion";
+import { ICoordinates } from "./Coordinates";
+export interface IGridCell {
+    coordinates: ICoordinates;
+    letterValue: string;
+    isTextCell: boolean;
+    parentQuestion: ICrossWordQuestion | false;
 }

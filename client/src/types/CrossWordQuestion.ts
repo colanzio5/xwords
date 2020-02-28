@@ -1,16 +1,16 @@
-import { Coordinates } from "./Coordinates";
+import { ICoordinates } from "./Coordinates";
 
-export type CrossWordQuestion = {
-    number: number,
-    length: number,
-    coordinates: Coordinates,
-    clue: string,
-    answer: string,
-    direction: CrossWordQuestionDirectionEnum
+export interface ICrossWordQuestion {
+    number: number;
+    length: number;
+    coordinates: ICoordinates;
+    clue: string;
+    correctAnswer: string;
+    proposedAnswer: string;
+    direction: CrossWordQuestionDirectionEnum;
 }
 
 export enum CrossWordQuestionDirectionEnum {
     VERTICAL = "VERTICAL",
     HORIZONTAL = "HORIZONTAL"
 }
-

@@ -1,13 +1,10 @@
-{  
+{
     "compilerOptions": {
-      "baseUrl": "./",
-      "paths": {
-        "@/*": [
-          "./*"
-        ]
-      },
-      "types": [
-        "./client/src/types/**"
-      ]
+        "baseUrl": "./",
+        "paths": {
+            "@/*": ["./*"]
+        },
+        "lib": ["ES2015", "DOM"],
+        "types": ["./client/src/types/**"]
     }
-  }
+}
