@@ -68,4 +68,4 @@ node_modules/
 dist
 
 # cached files
-.cache
+.cache/*
