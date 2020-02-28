@@ -32,7 +32,7 @@ export default class GridCellComponent extends Vue {
                 this.coordinates
             ).parentQuestion as ICrossWordQuestion;
             this.setActiveGameQuestion(question);
-        }
+        } else this.setActiveGameQuestion(null);
     }
 
     getStyle() {

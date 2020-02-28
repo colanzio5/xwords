@@ -6,8 +6,8 @@
             v-for="(question, index) of activeGameQuestions(direction)"
             :key="index"
             :open="isOpen(question)"
-            @open="emitSelected(question)"
-            @click="emitSelected(question)"
+            @open="setActiveGameQuestion(question)"
+            @close="setActiveGameQuestion(null)"
         >
             <div slot="trigger" slot-scope="props" class="card-header" role="button">
                 <p class="card-header-title">{{ question.clue }}</p>
@@ -47,11 +47,6 @@ export default class QuestionList extends Vue {
         return this.selectedQuestion && this.selectedQuestion.number
             ? this.selectedQuestion.number === question.number
             : false;
-    }
-
-    emitSelected(selectedQuestion: ICrossWordQuestion) {
-        console.log(selectedQuestion);
-        this.setActiveGameQuestion(selectedQuestion);
     }
 }
 </script>

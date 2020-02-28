@@ -8,7 +8,6 @@ import {
 } from "../types/CrossWordQuestion";
 import { ICoordinates } from "../types/Coordinates";
 import { ICrossWordGame } from "../types/CrossWordGame";
-import { IGridCell } from "../types/GridCell";
 import { User } from "../types/User";
 
 Vue.use(Vuex);
@@ -55,8 +54,6 @@ export default new Vuex.Store<RootState>({
         selectedCells: state => state.selectedCells,
         cellState: state => {
             return coordinates => {
-                // if (!state || !state.activeGame || state.activeGame.state)
-                //     return null;
                 const { x, y } = coordinates;
                 return state.activeGame.state[y][x];
             };
