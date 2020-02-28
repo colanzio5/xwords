@@ -1,9 +1,9 @@
 <template>
     <div>
-        <p>{{ direction === "VERTICAL" ? "Down" : "Across" }}</p>
+        <p>{{ direction }}</p>
         <b-collapse
             class="card"
-            v-for="(question, index) of questions.filter(q => q.direction === direction)"
+            v-for="(question, index) of activeGameQuestions(direction)"
             :key="index"
             :open="isOpen(question)"
             @open="emitSelected(question)"
@@ -17,12 +17,7 @@
             </div>
             <div class="card-content">
                 <div class="content">
-                    <input
-                        type="text"
-                        @update="emitUpdated()"
-                        :maxlength="question.length"
-                        v-model="currentAnswers[question.number]"
-                    />
+                    <input type="text" :maxlength="question.length" />
                 </div>
             </div>
         </b-collapse>
@@ -35,20 +30,18 @@ import {
     CrossWordQuestionDirectionEnum,
     ICrossWordQuestion
 } from "../types/CrossWordQuestion";
+import { Getter, Action } from "vuex-class";
 
 @Component({ name: "GridCellComponent" })
 export default class QuestionList extends Vue {
     @Prop()
     direction: CrossWordQuestionDirectionEnum;
 
-    @Prop()
-    questions: ICrossWordQuestion[];
-
-    @Prop()
-    selectedQuestion: ICrossWordQuestion;
-
-    @Prop()
-    currentAnswers: String[];
+    @Getter("activeGameQuestions") activeGameQuestions: ICrossWordQuestion[];
+    @Getter("selectedQuestion") selectedQuestion: ICrossWordQuestion;
+    @Action("setActiveGameQuestion") setActiveGameQuestion: (
+        question: ICrossWordQuestion
+    ) => void;
 
     isOpen(question) {
         return this.selectedQuestion && this.selectedQuestion.number
@@ -57,11 +50,8 @@ export default class QuestionList extends Vue {
     }
 
     emitSelected(selectedQuestion: ICrossWordQuestion) {
-        this.$emit("update:selectedQuestion", selectedQuestion);
-    }
-
-    emitUpdated() {
-        this.$emit("update:questionAnswer", this.currentAnswers);
+        console.log(selectedQuestion);
+        this.setActiveGameQuestion(selectedQuestion);
     }
 }
 </script>

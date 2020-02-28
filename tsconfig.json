@@ -4,7 +4,6 @@
         "paths": {
             "@/*": ["./*"]
         },
-        "lib": ["ES2015", "DOM"],
-        "types": ["./client/src/types/**"]
+        "lib": ["ES2015", "DOM"]
     }
 }

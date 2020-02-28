@@ -7,10 +7,25 @@ import {
     ICrossWordQuestion
 } from "../types/CrossWordQuestion";
 import { ICoordinates } from "../types/Coordinates";
+import { ICrossWordGame } from "../types/CrossWordGame";
+import { IGridCell } from "../types/GridCell";
+import { User } from "../types/User";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+interface RootState {
+    // user state
+    loggedIn: boolean;
+    user: User;
+    games: ICrossWordGame[];
+    // active game state
+    activeGameId: string;
+    activeGame: ICrossWordGame;
+    selectedQuestion: ICrossWordQuestion;
+    selectedCells: ICoordinates[];
+}
+
+export default new Vuex.Store<RootState>({
     state: {
         // user state
         loggedIn: false,
@@ -30,8 +45,22 @@ export default new Vuex.Store({
         // active game getters
         activeGameId: state => state.activeGameId,
         activeGame: state => state.activeGame,
+        activeGameQuestions: state => {
+            return direction =>
+                state.activeGame.meta.questions.filter(
+                    q => q.direction === direction
+                );
+        },
         selectedQuestion: state => state.selectedQuestion,
-        selectedCells: state => state.selectedCells
+        selectedCells: state => state.selectedCells,
+        cellState: state => {
+            return coordinates => {
+                // if (!state || !state.activeGame || state.activeGame.state)
+                //     return null;
+                const { x, y } = coordinates;
+                return state.activeGame.state[y][x];
+            };
+        }
     },
 
     mutations: {
@@ -43,7 +72,7 @@ export default new Vuex.Store({
         SET_ACTIVE_GAME_ID: (state, data) => (state.activeGameId = data),
         SET_ACTIVE_GAME: (state, data) => (state.activeGame = { ...data }),
         SET_SELECTED_QUESTION: (state, data) => (state.selectedQuestion = data),
-        SET_SELECTED_CELLS: (state, data) => (state.selectedQuestion = data)
+        SET_SELECTED_CELLS: (state, data) => (state.selectedCells = data)
     },
 
     actions: {
@@ -71,11 +100,10 @@ export default new Vuex.Store({
         fetchActiveGame: async ({ commit, state }) => {
             const gameId = state.activeGameId;
             const game = await fetchUserGameById(gameId);
-            console.log("GAME", game);
             commit("SET_ACTIVE_GAME", game);
         },
-        setActiveGameQuestion: ({ commit, state }, activeQuestion) => {
-            commit("SET_ACTIVE_GAME_QUESTION", activeQuestion);
+        setActiveGameQuestion: ({ commit }, activeQuestion) => {
+            commit("SET_SELECTED_QUESTION", activeQuestion);
             commit("SET_SELECTED_CELLS", _getSelectedCells(activeQuestion));
         }
     }

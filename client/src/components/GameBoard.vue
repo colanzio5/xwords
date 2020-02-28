@@ -1,7 +1,7 @@
 <template>
-    <div class="tile is-child is-primary" v-if="game && game.state" id="game-board">
-        <div v-for="(_, y) in game.state" :key="y">
-            <GridCellComponent v-for="(_, x) in row" :key="x" :coordinates="getCoordinates(x,y)"></GridCellComponent>
+    <div class="tile is-child is-primary" id="game-board" v-if="activeGame && activeGame.state">
+        <div v-for="(row, y) in activeGame.state" :key="y">
+            <GridCellComponent v-for="(col, x) in row" :key="x" :coordinates="getCoordinates(x,y)"></GridCellComponent>
         </div>
     </div>
 </template>
@@ -27,7 +27,7 @@ import { Getter } from "vuex-class";
     }
 })
 export default class GameBoard extends Vue {
-    @Getter("activeGame") game: CrossWordGame;
+    @Getter("activeGame") activeGame: CrossWordGame;
 
     private getCoordinates(x, y) {
         return { x, y } as ICoordinates;
