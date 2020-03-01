@@ -5,8 +5,8 @@ export interface ICrossWordQuestion {
     length: number;
     coordinates: ICoordinates;
     clue: string;
-    correctAnswer: string;
-    proposedAnswer: string;
+    correctAnswer: string[];
+    proposedAnswer: string[];
     direction: CrossWordQuestionDirectionEnum;
 }
 

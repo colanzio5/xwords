@@ -2,7 +2,6 @@
 
 ## todos:
 
--   [ ] Firebase serialization for game state
 -   [ ] Implement session storage for store
 -   [ ] Passwords and sharing for games
 -   [ ] Create new game view

@@ -38,7 +38,7 @@ export class CrossWordGame {
     constructor(useDefault: boolean = false) {
         if (useDefault) {
             (<any>Object).assign(this, testCrossword);
-            this.state = _createStateFromGame(testCrossword);
+            this.state = _initGridState(testCrossword);
         } else {
             this.id = null;
             this.name = null;
@@ -52,10 +52,12 @@ export class CrossWordGame {
     }
 }
 
-const _createStateFromGame = (game: CrossWordGame): IGridCell[][] => {
+const _initGridState = (game: CrossWordGame): IGridCell[][] => {
+    // create new state grid
+    // with attributes needed
     const generateArray = n => {
         let arr = [];
-        for (let i = 1; i <= n; i++) {
+        for (let i = 0; i < n; i++) {
             arr.push(i);
         }
         return arr;
@@ -76,7 +78,24 @@ const _createStateFromGame = (game: CrossWordGame): IGridCell[][] => {
             return gridCell;
         });
     });
+
     return state;
+};
+
+const _updateGridStateWithQuestionsState = (game: CrossWordGame) => {
+    // populate grid with proposed
+    // values for each question
+    for (const question of game.meta.questions) {
+        const proposedAnswer: string[] = question.proposedAnswer;
+        let { x, y } = question.coordinates;
+        for (const char of proposedAnswer) {
+            game.state[y][x].letterValue = char;
+            question.direction == CrossWordQuestionDirectionEnum.HORIZONTAL
+                ? x++
+                : y++;
+        }
+    }
+    return game;
 };
 
 const _isRootCell = (game, x, y): ICrossWordQuestion | false => {

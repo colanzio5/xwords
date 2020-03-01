@@ -1,6 +1,6 @@
 <template>
     <div class="tile is-child is-primary" id="game-board" v-if="activeGame && activeGame.state">
-        <div v-for="(row, y) in activeGame.state" :key="y">
+        <div v-for="(row, y) in activeGame.state" :key="y" style="display: flex;">
             <GridCellComponent v-for="(col, x) in row" :key="x" :coordinates="getCoordinates(x,y)"></GridCellComponent>
         </div>
     </div>

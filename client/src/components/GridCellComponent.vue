@@ -1,10 +1,8 @@
 <template>
-    <input
+    <div
         v-bind:style="getStyle()"
-        class="cell selected"
-        :value="cellState(coordinates).letterValue"
         @click="emitSelected($event)"
-    />
+    >{{cellState(coordinates).letterValue}}</div>
 </template>
 
 <script lang="ts">
@@ -40,6 +38,7 @@ export default class GridCellComponent extends Vue {
         if (this.cellState(this.coordinates).isTextCell) background = "white";
         if (this.isSelected()) background = "#7957d5";
         return {
+            border: "1px solid grey",
             height: "4vh",
             width: "4vh",
             background: background

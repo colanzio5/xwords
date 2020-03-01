@@ -24,6 +24,8 @@ import { Component, Vue, Prop, Provide } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import QuestionList from "../components/QuestionList.vue";
 import GameBoard from "../components/GameBoard.vue";
+import { createNewGame } from "../services/game.service";
+import * as firebase from "firebase";
 
 @Component({
     name: "Game",
@@ -33,9 +35,16 @@ import GameBoard from "../components/GameBoard.vue";
     }
 })
 export default class Game extends Vue {
-    @Action("fetchActiveGame") fetchActiveGame: () => void;
+    @Action("firebaseUpdateCallback") firebaseUpdateCallback: (
+        snapshot
+    ) => void;
+
     created() {
-        this.fetchActiveGame();
+        const ref = `games/${this.$store.getters.activeGame.id}/meta/questions/`;
+        const gameStateRef = firebase.database().ref(ref);
+        const firebaseUpdateCallback = snapshot =>
+            this.firebaseUpdateCallback(snapshot);
+        gameStateRef.on("value", firebaseUpdateCallback);
     }
 }
 </script>

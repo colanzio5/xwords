@@ -36,9 +36,8 @@ tr:hover {
 import { Component, Vue, Prop, Provide } from "vue-property-decorator";
 import * as firebase from "firebase";
 import { testCrossword } from "../../assets/test.crossword";
-import { fetchUserGames } from "../services/game.service";
+import { fetchUserGames, createNewGame } from "../services/game.service";
 import { State, Action, Getter } from "vuex-class";
-
 import { CrossWordGame } from "../types/CrossWordGame";
 
 @Component({ name: "GamesList" })
@@ -46,13 +45,14 @@ export default class GamesList extends Vue {
     @Getter("games") games: CrossWordGame[];
     @Action("fetchUserGames") fetchUserGames;
     @Action("setActiveGameId") setActiveGameId;
+    @Action("fetchActiveGame") fetchActiveGame: (id: string) => void;
 
     created() {
         this.fetchUserGames();
     }
 
-    goToGame(game) {
-        this.setActiveGameId(game.id);
+    async goToGame(game) {
+        await this.fetchActiveGame(game.id);
         this.$router.replace({
             name: "Game",
             params: { username: this.$route.params.username, gameId: game.id }

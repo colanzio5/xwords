@@ -1,7 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { loginWithEmailAndPassword } from "../services/user.service";
-import { fetchUserGames, fetchUserGameById } from "./game.service";
+import {
+    fetchUserGames,
+    fetchUserGameById,
+    updateGameQuestion
+} from "./game.service";
 import {
     CrossWordQuestionDirectionEnum,
     ICrossWordQuestion
@@ -9,6 +13,7 @@ import {
 import { ICoordinates } from "../types/Coordinates";
 import { ICrossWordGame } from "../types/CrossWordGame";
 import { User } from "../types/User";
+import { IGridCell } from "../types/GridCell";
 
 Vue.use(Vuex);
 
@@ -18,7 +23,6 @@ interface RootState {
     user: User;
     games: ICrossWordGame[];
     // active game state
-    activeGameId: string;
     activeGame: ICrossWordGame;
     selectedQuestion: ICrossWordQuestion;
     selectedCells: ICoordinates[];
@@ -31,7 +35,6 @@ export default new Vuex.Store<RootState>({
         user: null,
         games: null,
         // active game state
-        activeGameId: null,
         activeGame: null,
         selectedQuestion: null,
         selectedCells: null
@@ -42,10 +45,11 @@ export default new Vuex.Store<RootState>({
         user: state => state.user,
         games: state => state.games,
         // active game getters
-        activeGameId: state => state.activeGameId,
         activeGame: state => state.activeGame,
         activeGameQuestions: state => {
             return direction =>
+                state &&
+                state.activeGame &&
                 state.activeGame.meta.questions.filter(
                     q => q.direction === direction
                 );
@@ -62,14 +66,20 @@ export default new Vuex.Store<RootState>({
 
     mutations: {
         // user mutations
-        SET_LOGGED_IN: (state, data) => (state.loggedIn = data),
-        SET_USER: (state, data) => (state.user = data),
-        SET_GAMES: (state, data) => (state.games = data),
+        SET_LOGGED_IN: (state, isloggedIn) => (state.loggedIn = isloggedIn),
+        SET_USER: (state, user) => (state.user = user),
+        SET_GAMES: (state, games) => (state.games = games),
         // active game mutations
-        SET_ACTIVE_GAME_ID: (state, data) => (state.activeGameId = data),
-        SET_ACTIVE_GAME: (state, data) => (state.activeGame = { ...data }),
-        SET_SELECTED_QUESTION: (state, data) => (state.selectedQuestion = data),
-        SET_SELECTED_CELLS: (state, data) => (state.selectedCells = data)
+        SET_ACTIVE_GAME: (state, activeGame) => (state.activeGame = activeGame),
+        SET_SELECTED_QUESTION: (state, selectedQuestion) =>
+            (state.selectedQuestion = selectedQuestion),
+        SET_SELECTED_CELLS: (state, selectedCells) =>
+            (state.selectedCells = selectedCells),
+        SET_QUESTION_ANSWER: (state, { questionIndex, updatedQuestion }) => {
+            state.activeGame.meta.questions[questionIndex] = updatedQuestion;
+        },
+        SET_ACTIVE_GAME_STATE: (state, gameState) =>
+            (state.activeGame.state = gameState)
     },
 
     actions: {
@@ -91,17 +101,59 @@ export default new Vuex.Store<RootState>({
         },
 
         // active game actions
-        setActiveGameId: ({ commit }, gameId) => {
-            commit("SET_ACTIVE_GAME_ID", gameId);
-        },
-        fetchActiveGame: async ({ commit, state }) => {
-            const gameId = state.activeGameId;
+        fetchActiveGame: async ({ commit }, gameId: string) => {
             const game = await fetchUserGameById(gameId);
             commit("SET_ACTIVE_GAME", game);
         },
-        setActiveGameQuestion: ({ commit }, activeQuestion) => {
+        setActiveGameQuestion: (
+            { commit },
+            activeQuestion: ICrossWordQuestion
+        ) => {
             commit("SET_SELECTED_QUESTION", activeQuestion);
             commit("SET_SELECTED_CELLS", _getSelectedCells(activeQuestion));
+        },
+        updateQuestionAnswer: async (
+            { commit, state },
+            updatedQuestion: ICrossWordQuestion
+        ) => {
+            const questionIndex = state.activeGame.meta.questions.findIndex(
+                q => q.number === updatedQuestion.number
+            );
+            commit("SET_QUESTION_ANSWER", { questionIndex, updatedQuestion });
+            const newState: IGridCell[][] = _updateGridStateFromUpdatedQuestionAnswer(
+                updatedQuestion,
+                state.activeGame.state
+            );
+            commit("SET_ACTIVE_GAME_STATE", newState);
+            await updateGameQuestion(
+                state.activeGame.id,
+                questionIndex,
+                updatedQuestion
+            );
+        },
+        firebaseUpdateCallback: ({ commit, state }, snapshot) => {
+            let newState: IGridCell[][];
+            for (const updatedQuestion of snapshot.val()) {
+                const questionIndex = state.activeGame.meta.questions.findIndex(
+                    q => q.number === updatedQuestion.number
+                );
+                const isChanged =
+                    updatedQuestion.proposedAnswer !==
+                    state.activeGame.meta.questions[questionIndex]
+                        .proposedAnswer;
+
+                if (isChanged) {
+                    commit("SET_QUESTION_ANSWER", {
+                        questionIndex,
+                        updatedQuestion
+                    });
+                    newState = _updateGridStateFromUpdatedQuestionAnswer(
+                        updatedQuestion,
+                        state.activeGame.state
+                    );
+                }
+            }
+            commit("SET_ACTIVE_GAME_STATE", newState);
         }
     }
 });
@@ -132,4 +184,19 @@ const _getSelectedCells = (question: ICrossWordQuestion): ICoordinates[] => {
             return { x: v, y: childXCords[i] };
         });
     }
+};
+
+const _updateGridStateFromUpdatedQuestionAnswer = (
+    updatedQuestion: ICrossWordQuestion,
+    gameState: IGridCell[][]
+) => {
+    const proposedAnswer: string[] = updatedQuestion.proposedAnswer;
+    let { x, y } = updatedQuestion.coordinates;
+    for (const char of proposedAnswer) {
+        if (char != "") gameState[y][x].letterValue = char;
+        updatedQuestion.direction == CrossWordQuestionDirectionEnum.HORIZONTAL
+            ? x++
+            : y++;
+    }
+    return gameState;
 };

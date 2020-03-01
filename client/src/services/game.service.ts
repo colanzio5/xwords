@@ -1,5 +1,5 @@
 import * as firebase from "firebase";
-import { testCrossword } from "../../assets/test.crossword";
+import { CrossWordGame } from "../types/CrossWordGame";
 
 export const createNewGame = async () =>
     // gameName: string,
@@ -7,11 +7,12 @@ export const createNewGame = async () =>
     // gamePassword: string,
     // gameInfo: string
     {
+        const newGame = new CrossWordGame(true);
         const gameId = "12345";
         const createdGame = await firebase
             .database()
             .ref("games/" + gameId)
-            .set(testCrossword);
+            .set(newGame);
         console.log("[createNewGame] new game created: ", createdGame);
         return createdGame;
     };
@@ -33,9 +34,13 @@ export const fetchUserGameById = async gameId => {
     return snapshot.val();
 };
 
-export const updateGameState = async (gameId, gameState) => {
-    await firebase
+export const updateGameQuestion = async (
+    gameId,
+    questionIndex,
+    updatedQuestion
+) => {
+    return await firebase
         .database()
-        .ref(`games/${gameId}/state`)
-        .set(gameState);
+        .ref("games/" + gameId + "/meta/questions/" + questionIndex)
+        .set(updatedQuestion);
 };

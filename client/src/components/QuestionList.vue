@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <p>{{ direction }}</p>
+    <div v-if="activeGameQuestions(direction)">
+        <!-- <p>{{ direction }}</p> -->
         <b-collapse
             class="card"
             v-for="(question, index) of activeGameQuestions(direction)"
@@ -16,13 +16,29 @@
                 </a>
             </div>
             <div class="card-content">
-                <div class="content">
-                    <input type="text" :maxlength="question.length" />
+                <div class="content" style="display: flex;">
+                    <input
+                        v-for="(_, index) of question.proposedAnswer"
+                        :key="index"
+                        class="character-input"
+                        type="text"
+                        :maxlength="1"
+                        v-model="question.proposedAnswer[index]"
+                        @input="updateQuestionAnswer(question)"
+                    />
                 </div>
             </div>
         </b-collapse>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.character-input {
+    border: 1px solid black;
+    width: 3vw;
+    height: 3vw;
+}
+</style>
 
 <script lang="ts">
 import { Component, Vue, Prop, Provide } from "vue-property-decorator";
@@ -32,7 +48,7 @@ import {
 } from "../types/CrossWordQuestion";
 import { Getter, Action } from "vuex-class";
 
-@Component({ name: "GridCellComponent" })
+@Component({ name: "QuestionList" })
 export default class QuestionList extends Vue {
     @Prop()
     direction: CrossWordQuestionDirectionEnum;
@@ -41,6 +57,10 @@ export default class QuestionList extends Vue {
     @Getter("selectedQuestion") selectedQuestion: ICrossWordQuestion;
     @Action("setActiveGameQuestion") setActiveGameQuestion: (
         question: ICrossWordQuestion
+    ) => void;
+
+    @Action("updateQuestionAnswer") updateQuestionAnswer: (
+        updatedQuestion: ICrossWordQuestion
     ) => void;
 
     isOpen(question) {

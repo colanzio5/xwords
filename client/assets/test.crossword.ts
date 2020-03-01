@@ -18,7 +18,7 @@ export const testCrossword: CrossWordGame = {
     members: [],
     meta: {
         dimensions: {
-            x: 10,
+            x: 13,
             y: 10
         },
         questions: [
@@ -27,8 +27,8 @@ export const testCrossword: CrossWordGame = {
                 length: 9,
                 coordinates: { y: 2, x: 0 },
                 clue: '"Hump" day. This day is in the middle of the week.',
-                proposedAnswer: "",
-                correctAnswer: "Wednesday",
+                proposedAnswer: new Array("Wednesday".length).fill(""),
+                correctAnswer: "Wednesday".split(""),
                 direction: CrossWordQuestionDirectionEnum.HORIZONTAL
             },
             {
@@ -36,8 +36,8 @@ export const testCrossword: CrossWordGame = {
                 length: 8,
                 coordinates: { y: 4, x: 5 },
                 clue: 'Abbreviated as "Thurs"',
-                proposedAnswer: "",
-                correctAnswer: "Thursday",
+                proposedAnswer: new Array("Thursday".length).fill(""),
+                correctAnswer: "Thursday".split(""),
                 direction: CrossWordQuestionDirectionEnum.HORIZONTAL
             },
             {
@@ -46,8 +46,8 @@ export const testCrossword: CrossWordGame = {
                 coordinates: { y: 7, x: 1 },
                 clue:
                     "People say this is the most productive day of the week. Hint: it isn't Monday!",
-                proposedAnswer: "",
-                correctAnswer: "Tuesday",
+                proposedAnswer: new Array("Tuesday".length).fill(""),
+                correctAnswer: "Tuesday".split(""),
                 direction: CrossWordQuestionDirectionEnum.HORIZONTAL
             },
             {
@@ -55,8 +55,8 @@ export const testCrossword: CrossWordGame = {
                 length: 6,
                 coordinates: { y: 9, x: 0 },
                 clue: "The last day of the week. A day to rest.",
-                proposedAnswer: "",
-                correctAnswer: "Sunday",
+                proposedAnswer: new Array("Sunday".length).fill(""),
+                correctAnswer: "Sunday".split(""),
                 direction: CrossWordQuestionDirectionEnum.HORIZONTAL
             },
             {
@@ -64,8 +64,8 @@ export const testCrossword: CrossWordGame = {
                 length: 6,
                 coordinates: { y: 0, x: 3 },
                 clue: "This is the first day of the week",
-                proposedAnswer: "",
-                correctAnswer: "Monday",
+                proposedAnswer: new Array("Monday".length).fill(""),
+                correctAnswer: "Monday".split(""),
                 direction: CrossWordQuestionDirectionEnum.VERTICAL
             },
             {
@@ -73,8 +73,8 @@ export const testCrossword: CrossWordGame = {
                 length: 6,
                 coordinates: { y: 1, x: 10 },
                 clue: "This days starts the weekend! Thank gosh it's _______!",
-                proposedAnswer: "",
-                correctAnswer: "Friday",
+                proposedAnswer: new Array("Friday".length).fill(""),
+                correctAnswer: "Friday".split(""),
                 direction: CrossWordQuestionDirectionEnum.VERTICAL
             },
             {
@@ -82,8 +82,8 @@ export const testCrossword: CrossWordGame = {
                 length: 8,
                 coordinates: { y: 2, x: 5 },
                 clue: 'Starts with the letter "S". It\'s not Sunday!',
-                proposedAnswer: "",
-                correctAnswer: "Saturday",
+                proposedAnswer: new Array("Saturday".length).fill(""),
+                correctAnswer: "Saturday".split(""),
                 direction: CrossWordQuestionDirectionEnum.VERTICAL
             }
         ]
